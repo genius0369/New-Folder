@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roast Me Machine 🔥</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #050b1e;
+            color: #e0eaff;
+            text-align: center;
+        }
+
+        .mode input[type="radio"] {
+            accent-color: #1e90ff;
+        }
+
+        .mode {
+            margin: 15px 0;
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+        }
+
+        .mode label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: 50px auto;
+            padding: 25px;
+            background: #0b153a;
+            border-radius: 12px;
+            box-shadow: 0 0 20px #1e90ff;
+        }
+
+        h1 {
+            color: #4da6ff;
+        }
+
+        input {
+            width: 80%;
+            padding: 10px;
+            margin: 10px 0;
+            background: #02071a;
+            border: 1px solid #1e90ff;
+            color: white;
+            border-radius: 6px;
+        }
+
+        button {
+            background: #1e90ff;
+            border: none;
+            padding: 10px 15px;
+            margin: 5px;
+            color: white;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background: #63b3ff;
+        }
+
+        .mode {
+            margin: 10px 0;
+        }
+
+        .result {
+            margin-top: 20px;
+            font-size: 18px;
+            min-height: 60px;
+            padding: 10px;
+            background: #02071a;
+            border-left: 4px solid #1e90ff;
+            border-radius: 6px;
+            animation: glow 1.5s infinite alternate;
+        }
+
+        @keyframes glow {
+            from {
+                box-shadow: 0 0 5px #1e90ff;
+            }
+
+            to {
+                box-shadow: 0 0 15px #7f00ff;
+            }
+        }
+
+        .history {
+            margin-top: 20px;
+            text-align: left;
+            font-size: 14px;
+            max-height: 120px;
+            overflow-y: auto;
+        }
+
+        .history div {
+            background: #02071a;
+            margin: 5px 0;
+            padding: 6px;
+            border-radius: 5px;
+        }
+
+        footer {
+            margin-top: 25px;
+            font-size: 14px;
+            color: #7fbfff;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>🔥 Roast Me Machine</h1>
+
+        <input type="text" id="nameInput" placeholder="Enter your name">
+
+        <div class="mode">
+            <label>
+                <input type="radio" name="mode" value="soft" checked> Soft
+            </label>
+            <label>
+                <input type="radio" name="mode" value="savage"> Savage
+            </label>
+        </div>
+
+        <button onclick="generateRoast()">Roast Me</button>
+        <button onclick="saveRoast()">💾 Save</button>
+        <button onclick="copyRoast()">📋 Copy</button>
+        <button onclick="shareRoast()">📤 Share</button>
+
+        <div class="result" id="resultBox">Your roast will appear here...</div>
+
+        <p>Total Roasts Generated: <span id="counter">0</span></p>
+
+        <div class="history" id="historyBox"></div>
+
+        <footer>Made with ❤ by Genius</footer>
+    </div>
+
+    <script>
+        const softRoasts = [
+            "You don’t need Google… you need common sense updates.",
+            "You’re not useless… you’re just in power saving mode.",
+            "You remind me of math… I don’t like you, don’t understand you.",
+            "You don’t trip… you do random gravity checks.",
+            "Your brain works… just on airplane mode."
+        ];
+
+        const savageRoasts = [
+            "If laziness were a sport, you'd still come second.",
+            "You don't have stupid ideas… just unlimited supply.",
+            "You're not slow… just buffering since birth.",
+            "You don't need a GPS… you’re already lost.",
+            "Your confidence is impressive for someone with zero evidence."
+        ];
+
+        let currentRoast = "";
+        let roastCount = localStorage.getItem("roastCount") || 0;
+        document.getElementById("counter").innerText = roastCount;
+
+        function generateRoast() {
+            const name = document.getElementById("nameInput").value || "You";
+            const mode = document.querySelector('input[name="mode"]:checked').value;
+
+            const list = mode === "soft" ? softRoasts : savageRoasts;
+            const random = list[Math.floor(Math.random() * list.length)];
+
+            currentRoast = name + ", " + random;
+
+            document.getElementById("resultBox").innerText = currentRoast;
+
+            roastCount++;
+            localStorage.setItem("roastCount", roastCount);
+            document.getElementById("counter").innerText = roastCount;
+
+            addToHistory(currentRoast);
+        }
+
+        function saveRoast() {
+            if (!currentRoast) return;
+            localStorage.setItem("bestRoast", currentRoast);
+            alert("Saved as Best Roast!");
+        }
+
+        function copyRoast() {
+            if (!currentRoast) return;
+            navigator.clipboard.writeText(currentRoast);
+            alert("Copied to clipboard!");
+        }
+
+        function shareRoast() {
+            if (!currentRoast) return;
+
+            if (navigator.share) {
+                navigator.share({
+                    title: "My Roast",
+                    text: currentRoast
+                });
+            } else {
+                alert("Sharing not supported on this browser.");
+            }
+        }
+
+        function addToHistory(text) {
+            const box = document.getElementById("historyBox");
+            const div = document.createElement("div");
+            div.innerText = text;
+            box.prepend(div);
+        }
+    </script>
+
+</body>
+
+</html>
